@@ -17,6 +17,7 @@ exports.delete = [validate([
   })
 ]), validateFileIsExist]
 
+exports.setTop = exports.delete
 
 exports.updateStatus = [validate([
   param('id').notEmpty().custom(async (id, {

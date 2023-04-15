@@ -3,6 +3,7 @@ const { unlink } = require('fs/promises')
 const { createFileURL, createThumbnailURL } = require('../util')
 const imageCompression = require('../util/imageCompression')
 const path = require('path')
+const Sequelize = require('sequelize')
 // 文件上传
 exports.uploadFile = async (req, res, next) => {
   try {
@@ -19,7 +20,8 @@ exports.uploadFile = async (req, res, next) => {
     // 压缩后图片的url
     req.file.thumbnailUrl = thumbnailUrl
     // 表示图片待审核
-    req.file.reviewStatus = 'pending' 
+    // 在定义模型时设置了初值pending 这里不再需要了
+    // req.file.reviewStatus = 'pending' 
     const file = await File.create(req.file)
     res.status(201).json({
       message: '文件上传成功',
@@ -57,7 +59,11 @@ exports.fetchAllPassFileList = async (req, res, next) => {
   try {
     const { pageNumber, pageSize } = req.query
     const options = {
-      order: [['id', 'DESC']],
+      order: [
+        Sequelize.literal('isTop DESC'), // isTop 为 true 的在前面
+        Sequelize.literal('CASE WHEN isTop THEN weight ELSE NULL END DESC'), // isTop 为 true 时按照 weight 排序
+        ['id', 'DESC'] // isTop 为 false 时，按照 id 排序
+      ],
       where: {
         reviewStatus: 'pass'
       }
@@ -103,6 +109,27 @@ exports.updateStatus = async (req, res, next) => {
     })
     res.status(201).json({
       message: '审核状态更新成功'
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
+// 图片置顶
+exports.setTop = async (req, res, next) => {
+  /**
+   * TODO
+   * 取消置顶
+   */
+  try {
+    await req.file.update({
+      isTop: true,
+      // 如果多张图都被置顶了
+      // 后置顶的权重应该更大
+      weight: Date.now().toString()
+    })
+    res.status(201).json({
+      message: '置顶成功'
     })
   } catch (err) {
     next(err)

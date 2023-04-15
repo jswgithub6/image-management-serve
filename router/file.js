@@ -18,6 +18,9 @@ router.get('/reviewStatus/pass', fileValidate.get, fileController.fetchAllPassFi
 // 更新图片的状态
 router.patch('/:id/reviewStatus/:status', fileValidate.updateStatus, fileController.updateStatus)
 
+// 置顶图片
+router.patch('/:id/isTop', fileValidate.setTop, fileController.setTop)
+
 // 删除文件
 router.delete('/:id', fileValidate.delete, fileController.deleteFile)
 
