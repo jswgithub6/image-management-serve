@@ -1,3 +1,5 @@
+### 2023-4-15 更新了数据库中File这张表的字段，需要删除旧表并执行npm run db:migrate命令生成新的表
+
 ### 技术栈
 node.js + express + sequelize(ORM) + mysql
 图片压缩 tinypng在线压缩api
