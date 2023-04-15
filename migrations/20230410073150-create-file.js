@@ -39,8 +39,8 @@ module.exports = {
         defaultValue: false
       },
       weight: {
-        type: Sequelize.INTEGER,
-        defaultValue: 0,
+        type: Sequelize.STRING,
+        defaultValue: '0',
       },
       order: {
         type: Sequelize.INTEGER,

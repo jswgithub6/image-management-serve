@@ -30,8 +30,8 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: false
     },
     weight: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
+      type: DataTypes.STRING,
+      defaultValue: '0',
     },
     order: {
       type: DataTypes.INTEGER,
