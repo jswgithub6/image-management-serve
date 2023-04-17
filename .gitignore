@@ -102,3 +102,13 @@ dist
 
 # TernJS port file
 .tern-port
+
+# local test image
+public/files/*.jpg
+public/files/*.jpeg
+public/files/*.png
+public/files/*.gif
+public/thumbnail/*.jpg
+public/thumbnail/*.jpeg
+public/thumbnail/*.png
+public/thumbnail/*.gif
