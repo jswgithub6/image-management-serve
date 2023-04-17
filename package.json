@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./app",
     "db:create": "node ./script/createDB",
+    "db:drop-migrate": "node ./script/dropTable.js && npx sequelize-cli db:migrate",
     "db:migrate": "npx sequelize-cli db:migrate",
     "db:test": "node ./script/test"
   },

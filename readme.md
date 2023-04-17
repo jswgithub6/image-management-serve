@@ -1,4 +1,4 @@
-### 2023-4-15 更新了数据库中File这张表的字段，需要删除旧表并执行npm run db:migrate命令生成新的表
+### 2023-4-15 更新了数据库中File这张表的字段，需要执行npm run db:drop-migrate删除旧表并生成新表
 
 ### 技术栈
 node.js + express + sequelize(ORM) + mysql
@@ -22,6 +22,9 @@ node.js + express + sequelize(ORM) + mysql
 
 4. 运行sequelize迁移文件，生成表
    ```sh
+   # 删除旧表并生成新表
+   npm run db:drop-migrate 
+   # 生成新表
    npm run db:migrate
    ```
 
