@@ -37,7 +37,11 @@ exports.fetchFileList = async (req, res, next) => {
   try {
     const { pageNumber, pageSize } = req.query
     const options = {
-      order: [['id', 'DESC']]
+      order: [
+        Sequelize.literal('isTop DESC'), // isTop 为 true 的在前面
+        Sequelize.literal('CASE WHEN isTop THEN weight ELSE NULL END DESC'), // isTop 为 true 时按照 weight 排序
+        ['order', 'DESC'] // isTop 为 false 时，按照 order 排序
+      ],
     }
     if(pageNumber && pageSize) {
       Object.assign(options, {
@@ -62,7 +66,7 @@ exports.fetchAllPassFileList = async (req, res, next) => {
       order: [
         Sequelize.literal('isTop DESC'), // isTop 为 true 的在前面
         Sequelize.literal('CASE WHEN isTop THEN weight ELSE NULL END DESC'), // isTop 为 true 时按照 weight 排序
-        ['id', 'DESC'] // isTop 为 false 时，按照 id 排序
+        ['order', 'DESC'] // isTop 为 false 时，按照 id 排序
       ],
       where: {
         reviewStatus: 'pass'
