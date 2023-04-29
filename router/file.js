@@ -24,4 +24,7 @@ router.patch('/:id/isTop', fileValidate.setTop, fileController.setTop)
 // 删除文件
 router.delete('/:id', fileValidate.delete, fileController.deleteFile)
 
+// 排序
+router.post('/sort', fileController.sortFile)
+
 module.exports = router

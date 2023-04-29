@@ -4,6 +4,7 @@ const { createFileURL, createThumbnailURL } = require('../util')
 const imageCompression = require('../util/imageCompression')
 const path = require('path')
 const Sequelize = require('sequelize')
+const { updateFileOrders } = require('./sort')
 // 文件上传
 exports.uploadFile = async (req, res, next) => {
   try {
@@ -139,3 +140,24 @@ exports.setTop = async (req, res, next) => {
     next(err)
   }
 }
+
+// 图片排序
+exports.sortFile = async (req, res, next) => {
+  try {
+    const { id, order, insertBefore, insertAfter } = req.body
+    const file = (await File.findByPk(id)).toJSON()
+    if(file.isTop) { 
+      /**
+       * TODO
+       */
+    } else {
+      await updateFileOrders(order, insertAfter, insertBefore)
+    }
+    res.status(201).json({
+      message: '排序成功'
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
