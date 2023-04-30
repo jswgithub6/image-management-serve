@@ -45,6 +45,7 @@ node.js + express + sequelize(ORM) + mysql
 | /api/file/:id/reviewStatus/:status | patch | 将指定id文件的审核状态更新为status |
 | /api/file/:id | delete | 删除指定id的文件 |
 | /api/file/:id/isTop | patch | 将指定id的图片设置为置顶 |
+| /api/file/sort | post | 图片排序接口 |
 
 
 ### 配置文件

@@ -1,53 +1,35 @@
 const { Op } = require('sequelize');
 const { File, sequelize } = require('../models')
 
-exports.updateFileOrders = async (order, insertAfter, insertBefore) => {
-  const t = await sequelize.transaction(); // 开启事务
+exports.updateFileProperty = async (prop, value, insertAfter, insertBefore) => {
+  const t = await sequelize.transaction();
   try {
-    if(insertAfter !== undefined) {
-      // 1. 获取 order 到 insertAfter 之间所有的文件
-      const filesToUpdate = await File.findAll({
-        where: {
-          order: {
-            [Op.between]: [order, insertAfter]
-          }
-        },
-        order: [['order', 'ASC']],
-        transaction: t,
-        lock: t.LOCK.UPDATE // 使用排它锁，避免并发更新问题
-      });
-  
-      // 2. 依次更新这些文件的 order 值为它前一个文件的 order 值
-      let prevOrder = insertAfter;
-      for (const file of filesToUpdate) {
-        const o = file.order
-        await file.update({ order: prevOrder }, { transaction: t });
-        prevOrder = o;
-      }
-    } else {
-      // 1. 获取 insertBefore 到 order 之间所有的文件
-      const filesToUpdate = await File.findAll({
-        where: {
-          order: {
-            [Op.between]: [insertBefore, order]
-          }
-        },
-        order: [['order', 'DESC']],
-        transaction: t,
-        lock: t.LOCK.UPDATE // 使用排它锁，避免并发更新问题
-      });
-  
-      // 2. 依次更新这些文件的 order 值为它前一个文件的 order 值
-      let prevOrder = insertBefore;
-      for (const file of filesToUpdate) {
-        const o = file.order
-        await file.update({ order: prevOrder }, { transaction: t });
-        prevOrder = o;
-      }      
+    const [start, end, orderDir] = insertAfter !== undefined
+      ? [value, insertAfter, 'ASC']
+      : [insertBefore, value, 'DESC'];
+
+    const filesToUpdate = await File.findAll({
+      where: {
+        [prop]: {
+          [Op.between]: [start, end]
+        }
+      },
+      order: [[prop, orderDir]],
+      transaction: t,
+      lock: t.LOCK.UPDATE
+    });
+
+    let newValue = insertAfter !== undefined ? insertAfter : insertBefore;
+    for (const file of filesToUpdate) {
+      const oldValue = file[prop];
+      await file.update({ [prop]: newValue }, { transaction: t });
+      newValue = oldValue;
     }
-    await t.commit(); // 提交事务
+
+    await t.commit();
   } catch (error) {
-    await t.rollback(); // 回滚事务
-    throw error
+    console.error(error);
+    await t.rollback();
+    throw new Error(`更新文件 ${prop} 失败`);
   }
 }

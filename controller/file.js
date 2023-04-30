@@ -4,7 +4,7 @@ const { createFileURL, createThumbnailURL } = require('../util')
 const imageCompression = require('../util/imageCompression')
 const path = require('path')
 const Sequelize = require('sequelize')
-const { updateFileOrders } = require('./sort')
+const { updateFileProperty } = require('./sort')
 // 文件上传
 exports.uploadFile = async (req, res, next) => {
   try {
@@ -141,18 +141,23 @@ exports.setTop = async (req, res, next) => {
   }
 }
 
-// 图片排序
 exports.sortFile = async (req, res, next) => {
   try {
     const { id, order, insertBefore, insertAfter } = req.body
-    const file = (await File.findByPk(id)).toJSON()
-    if(file.isTop) { 
-      /**
-       * TODO
-       */
-    } else {
-      await updateFileOrders(order, insertAfter, insertBefore)
-    }
+    const file = await File.findByPk(id, { raw: true })
+    const isTop = file.isTop
+    const prop = isTop ? 'weight' : 'order'
+    const value = isTop ? file.weight : order
+
+    const insertValue = insertBefore ?? insertAfter
+    console.log(insertValue)
+    const insertFile = await File.findOne({ where: { order: insertValue }, raw: true })
+    console.log(insertFile)
+    const insertBeforeValue = insertBefore !== undefined ? insertFile[prop] : undefined;
+    const insertAfterValue = insertBefore === undefined ? insertFile[prop] : undefined;
+
+    await updateFileProperty(prop, value, insertAfterValue, insertBeforeValue)
+
     res.status(201).json({
       message: '排序成功'
     })
