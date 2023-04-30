@@ -1,7 +1,8 @@
 const imageCompression = require("./imageCompression")
-const { uploadImageToImageHosting } = require("./uploadImage")
+const uploadImageToImageHosting = require("./uploadImage")
 const { parse } = require('path')
 const { createFileURL, createThumbnailURL } = require('./createImageUrl.js')
+
 // 压缩图片并生成图片的url
 exports.processImage = async (imgPath) => {
   const { base: filename } = parse(imgPath)
