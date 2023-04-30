@@ -1,33 +1,22 @@
 const { File } = require('../models')
 const { unlink } = require('fs/promises')
-const { createFileURL, createThumbnailURL } = require('../util')
-const imageCompression = require('../util/imageCompression')
-const path = require('path')
 const Sequelize = require('sequelize')
 const { updateFileProperty } = require('./sort')
+const { processImage } = require('../util/processImage')
+
 // 文件上传
 exports.uploadFile = async (req, res, next) => {
   try {
-    const filename = req.file.filename
-    // 原图片的url
-    req.file.url = createFileURL(filename)
-    let thumbnailUrl = req.file.url
-    // 如果图片格式满足tinypng的压缩要求
-    // 调用tinypng的api压缩图片
-    if((/.(jpg|jpeg|png|WebP)$/i).test(filename)) {
-      await imageCompression(req.file.path, path.join(__dirname, '../public/thumbnail', filename))
-      thumbnailUrl = createThumbnailURL(filename)
-    }
-    // 压缩后图片的url
-    req.file.thumbnailUrl = thumbnailUrl
-    // 表示图片待审核
-    // 在定义模型时设置了初值pending 这里不再需要了
-    // req.file.reviewStatus = 'pending' 
-    const file = await File.create(req.file)
-    res.status(201).json({
-      message: '文件上传成功',
-      file
-    })
+  const filePath = req.file.path
+  const { url, thumbUrl } = await processImage(filePath)
+  // 原图url和缩略图url
+  req.file.url = url
+  req.file.thumbnailUrl = thumbUrl
+  const file = await File.create(req.file)
+  res.status(201).json({
+    message: '文件上传成功',
+    file
+  })
   } catch (err) {
     next(err)
   }
