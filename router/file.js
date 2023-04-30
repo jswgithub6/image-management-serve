@@ -19,7 +19,10 @@ router.get('/reviewStatus/pass', fileValidate.get, fileController.fetchAllPassFi
 router.patch('/:id/reviewStatus/:status', fileValidate.updateStatus, fileController.updateStatus)
 
 // 置顶图片
-router.patch('/:id/isTop', fileValidate.setTop, fileController.setTop)
+router.patch('/:id/setTop', fileValidate.updateTopStatus, fileController.setTop)
+
+// 取消置顶
+router.patch('/:id/cancelTop', fileValidate.updateTopStatus, fileController.cancelTop)
 
 // 删除文件
 router.delete('/:id', fileValidate.delete, fileController.deleteFile)

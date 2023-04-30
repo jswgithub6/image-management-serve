@@ -122,10 +122,6 @@ exports.updateStatus = async (req, res, next) => {
 
 // 图片置顶
 exports.setTop = async (req, res, next) => {
-  /**
-   * TODO
-   * 取消置顶
-   */
   try {
     await req.file.update({
       isTop: true,
@@ -140,6 +136,22 @@ exports.setTop = async (req, res, next) => {
     next(err)
   }
 }
+
+// 取消置顶
+exports.cancelTop = async (req, res, next) => {
+  try {
+    await req.file.update({
+      isTop: false,
+      weight: 0
+    })
+    res.status(201).json({
+      message: '取消置顶'
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
 
 exports.sortFile = async (req, res, next) => {
   try {
