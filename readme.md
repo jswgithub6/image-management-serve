@@ -1,4 +1,6 @@
-### 2023-4-15 更新了数据库中File这张表的字段，需要执行npm run db:drop-migrate删除旧表并生成新表
+### 更新
+2023-04-30: 将所有的配置信息从 `config/*.json` 文件迁移到 `.env` 文件中    
+2023-04-15: 更新了数据库中File这张表的字段，需要执行`npm run db:drop-migrate`删除旧表并生成新表
 
 ### 技术栈
 node.js + express + sequelize(ORM) + mysql
@@ -49,9 +51,5 @@ node.js + express + sequelize(ORM) + mysql
 | /api/file/sort | post | 图片排序接口 |
 
 
-### 配置文件
-
-config/dbconfig.json 数据库配置文件
-config/server.json 服务端口配置文件
-config/tinify.json tinypng在线压缩api配置文件
-
+### 配置文件    
+配置文件 .env 位于 config/ 目录下。
