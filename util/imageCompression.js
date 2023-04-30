@@ -1,15 +1,13 @@
 const tinify = require("tinify")
-const path = require('path')
-// tinypng在线图片压缩 
-// 文档https://tinypng.com/developers/reference/nodejs
-const apiKey = require(path.join(__dirname + '/../config/tinify.json')).key
-tinify.key = apiKey
 const { parse, join } = require('path')
 const { copyFile } = require('fs/promises')
 
+const apiKey = process.env.TINIFY_API_KEY
+tinify.key = apiKey
 const regExp = /.(jpg|jpeg|png|WebP)$/i
 
-module.exports = async (imgPath) => { 
+// tinypng在线图片压缩  https://tinypng.com/developers/reference/nodejs
+async function imageCompression(imgPath) { 
   try {
     const { ext, base: filename } = parse(imgPath)
     const dest = join(__dirname, '../public/thumbnail', filename)
@@ -33,3 +31,5 @@ module.exports = async (imgPath) => {
     throw error
   }
 }
+
+module.exports = imageCompression

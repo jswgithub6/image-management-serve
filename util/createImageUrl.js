@@ -1,6 +1,8 @@
-const env = process.env.NODE_ENV || "development";
-const config = require('../config/server.json')[env]
 const { join } = require('path')
+const config = {
+  host: process.env.HOST,
+  port: process.env.PORT
+}
 
 exports.createFileURL = (filename) => {
   const relativePath = join('files', filename);
