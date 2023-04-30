@@ -2,5 +2,5 @@
 const path = require('path');
 
 module.exports = {
-  'config': path.resolve('config', 'dbconfig.json'),
+  'config': path.resolve('config', 'dbconfig.js'),
 };
