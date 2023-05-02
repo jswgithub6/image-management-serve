@@ -1,4 +1,4 @@
-const { join } = require('path')
+const { join } = require('path').posix
 const config = {
   host: process.env.HOST,
   port: process.env.PORT
