@@ -151,9 +151,7 @@ exports.sortFile = async (req, res, next) => {
     const value = isTop ? file.weight : order
 
     const insertValue = insertBefore ?? insertAfter
-    console.log(insertValue)
     const insertFile = await File.findOne({ where: { order: insertValue }, raw: true })
-    console.log(insertFile)
     const insertBeforeValue = insertBefore !== undefined ? insertFile[prop] : undefined;
     const insertAfterValue = insertBefore === undefined ? insertFile[prop] : undefined;
 
