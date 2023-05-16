@@ -6,7 +6,7 @@ const Sequelize = require('sequelize');
   async function dropTable() {
     try {
       await sequelize.getQueryInterface().dropTable('Files');
-      await sequelize.query('DELETE FROM `sequelizemeta`')
+      await sequelize.query('DELETE FROM `SequelizeMeta`')
       console.log('Table dropped successfully');
     } catch (error) {
       console.error('Error dropping table:', error);

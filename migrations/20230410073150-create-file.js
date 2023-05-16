@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('files', {
+    await queryInterface.createTable('Files', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -58,12 +58,12 @@ module.exports = {
     });
     // 添加 beforeCreate 钩子函数
     await queryInterface.sequelize.transaction(async transaction => {
-      await queryInterface.sequelize.query('ALTER TABLE `files` AUTO_INCREMENT = 1', { transaction });
+      await queryInterface.sequelize.query('ALTER TABLE `Files` AUTO_INCREMENT = 1', { transaction });
       await queryInterface.sequelize.query(`
-        CREATE TRIGGER files_before_insert_trigger BEFORE INSERT ON files FOR EACH ROW
+        CREATE TRIGGER Files_before_insert_trigger BEFORE INSERT ON Files FOR EACH ROW
         BEGIN
           DECLARE max_order INT;
-          SELECT MAX(\`order\`) INTO max_order FROM files;
+          SELECT MAX(\`order\`) INTO max_order FROM Files;
           SET NEW.\`order\` = IFNULL(max_order, 0) + 1;
         END;
       `, { transaction });
@@ -71,6 +71,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('files');
+    await queryInterface.dropTable('Files');
   }
 };
